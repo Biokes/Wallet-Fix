@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import abi from "../abi.json";
 import { ethers } from "ethers";
-import './app.css';
+import './App.css';
 import { ToastContainer, toast } from "react-toastify";
 
 const contractAddress = "0x9da4195efb3f0da96a22eef5e7a24cd71b968b2e";
