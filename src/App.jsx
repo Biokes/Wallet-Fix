@@ -13,6 +13,10 @@ function App() {
 
   useEffect(() => {
     if (window.ethereum) setHasMetaMask(true);
+    const storedMessage = localStorage.getItem("contractText");
+    if (storedMessage) {
+      setMessage(storedMessage);
+    }
   }, []);
 
   async function requestAccount() {
@@ -34,11 +38,13 @@ function App() {
 
         const tx = await contract.setMessage(text);
         const txReceipt = await tx.wait();
+        localStorage.setItem("contractText", text);
+        setMessage(text);
         console.log("Transaction successful:", txReceipt);
         toast.success("Message successfully set.");
         setText("");
       } else {
-        toast.error("Metamask not installed.");
+        toast.error("MetaMask not installed.");
       }
     } catch (error) {
       console.error("Error setting message:", error);
@@ -53,8 +59,12 @@ function App() {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const contract = new ethers.Contract(contractAddress, abi, signer);
-        const tx = await contract.getMessage();
-        setMessage(tx);
+        const fetchedMessage = await contract.getMessage();
+        localStorage.setItem("contractText", fetchedMessage);
+        setMessage(fetchedMessage);
+        toast.success("Message successfully fetched.");
+      } else {
+        toast.error("MetaMask not installed.");
       }
     } catch (error) {
       console.error("Error getting message:", error);
@@ -65,7 +75,8 @@ function App() {
   const reset = () => {
     setMessage("");
     setText("");
-  }
+    localStorage.removeItem("contractText");
+  };
 
   return (
     <div className="flex flex-col display-center items-center bg-gray-500 shadow-lg rounded p-4 shadow-md w-full max-w-[450px]">
@@ -88,6 +99,7 @@ function App() {
           <button onClick={reset}>Back</button>
         </div>
       )}
+      <button onClick={handleGet}>Get Message</button>
       <ToastContainer />
     </div>
   );
