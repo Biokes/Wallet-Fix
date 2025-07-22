@@ -79,8 +79,7 @@ function App() {
             className="w-[90%] h-[70px] my-8 outline-0 border-[1px] border-gray-300 rounded p-2"
             onChange={(e) => setText(e.target.value)}
           />
-          <button onClick={handleSet}>Set Message</button>
-          <button onClick={handleGet} className="">Get Message</button>
+          <button onClick={handleSet} className={text.trim()?'cursor-none bg-gray-700':'cursor-pointer'}>Set Message</button>
         </div>
       ) : (
         <div style={{ padding: "2rem", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
